@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: algorithm | Darren]]></title>
+  <link href="http://dnizna.github.io/blog/categories/algorithm/atom.xml" rel="self"/>
+  <link href="http://dnizna.github.io/"/>
+  <updated>2013-05-26T10:59:25+08:00</updated>
+  <id>http://dnizna.github.io/</id>
+  <author>
+    <name><![CDATA[Darren]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[树状数组]]></title>
+    <link href="http://dnizna.github.io/blog/2013/05/26/shu-zhuang-shu-zu/"/>
+    <updated>2013-05-26T10:39:00+08:00</updated>
+    <id>http://dnizna.github.io/blog/2013/05/26/shu-zhuang-shu-zu</id>
+    <content type="html"><![CDATA[<h3 id="section">概念</h3>
+<p>对于一个整形数组A[n]， 动态修改数组中的项A[i]，然求A[0]到A[j]的和。这种问题传统的做法需要的时间复杂度是O(n)。 树状数组是一种数据结构可以使用O(<script type="math/tex">log_{2}n</script>)的时间在线求数组和。</p>
+
+<h3 id="section-1">原理</h3>
+
+<h4 id="lowbit">1. lowbit函数</h4>
+<p>对整数 x 表示成二进制之后，求出二进制表示中最右边的 1 的位置。如:  </p>
+
+<p><code>java
+ lowbit(6)=lowbit(0b110)=0b10=2
+ lowbit(5)=lowbit(0b101)=0b1=1
+ lowbit(4)=lowbit(0b100)=0b100=4
+ lowbit(3)=lowbit(0b11)=0b1=1
+</code></p>
+
+<p>奇数的 lowbit 函数值都为 1 。lowbit 的函数值都是 2 的 n 次方。 <br />
+使用位运算可以很容易求出这个值:   </p>
+
+<p><code>c
+#define lowbit(x)  (-(x)&amp;(x))
+</code></p>
+
+<p>负数的二进制表示是其正数的反码加上1。如果一个数是 2 的 n 次方，这个数的正负数的二进制表示是相同的，只是符号位不同。  </p>
+
+<p>记 S[x] 表示A[n]数组中 A[<script type="math/tex">x−2^p+1</script>] 到 A[x] 中这一段的和。即：<br />
+S[<script type="math/tex">x</script>] = A[<script type="math/tex">x−2^p+1</script>] + A[<script type="math/tex">x−2^p+2</script>] + … + A[<script type="math/tex">x</script>]，其中 <script type="math/tex">2^p</script> 的值为 lowbit(x)。  </p>
+
+<h4 id="section-2">2. 数组求和</h4>
+<p>对于 A[1] 到 A[x] 的和sum[x] 可以通过 S[x] 使用以下方式求得：<br />
+sum[x] = S[x] + S[x - lowbit(x)] + S[x - lowbit(x) - lowbit(x - lowbit(x))] + … 直到下标为0。  </p>
+
+<p><code>java
+// 树状数组计算 A[1] 到 A[x] 的和
+int sum(x)
+{
+  int sum = 0;
+  for(; x; x -= lowbit(x))
+  {
+    sum += S[x];
+  }
+  return sum;
+}
+</code></p>
+
+<h4 id="section-3">3. 数组更新</h4>
+<p>如果修改了数组A[N]中某一项的值A[x]，如何保证S[x]也同时进行更新。<br />
+思考下，A[x]的值修改了，会影响到S[N]中哪些项的值。不难得到，对于S[N]数组中的某一项 S[y]，如果 y - lowbit(y) &gt; x， 那么 S[y] 的值必然受到 A[x] 值修改的影响。所以更新A[x]的值时需要同时更新受影响的S[y]的值。</p>
+
+<p><code>java
+// 树状数组更新值
+void add(int x, int v)
+{
+  A[x] += v;
+  for(; x &lt; N; x+= lowbit(x))
+  {
+    S[x] += v;
+  }
+}
+</code></p>
+
+<p>如x = 3， lowbit(x) = 1， x + lowbit(x) = 4。S[4] 表示 A[1]+ … + A[4]， 包含A[3]，故S[4] 需要更新。<br />
+4 + lowbit(4) = 8。 S[8] 表示 A[1] + A[2] + … + A[8] 的和，包含 A[3]，故S[8]需要更新。  </p>
+
+<h3 id="section-4">应用</h3>
+
+<h4 id="section-5">1. 求逆序数</h4>
+
+<p>a. 对数据进行离散化。
+所谓离散化就是将大的数据映射到小的数据。如一个数组包含[10000, 10, 1000, 100]四个数，因为逆序只关心数据的大小关系， 并不关系数据的值到底是多少。这个数组的逆序数的个数和数组[4,1,3,2]是完全相同的。建立这样的映射关系是减少数据的处理范围。</p>
+
+<p>b. 按照数组的顺序依次将离散化后的数据插入到树状数组。 
+插入离散化后的数据x前，统计当前状态中包含多少个小于x的数。然后将当前状态 的数据总量减去这个数就是大于x的数的数量，也就是当前状态中和x这个数据匹配的逆序的数量。</p>
+
+<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/treearray/poj2299.cpp" target="_blank">poj2299</a></p>
+
+<h4 id="section-6">2. 二维树状数组以及多维</h4>
+
+<p>```java
+void add(int x, int y, int v)
+{
+  for(int i = x; i &lt; N; i += lowbit(i))
+  {
+    for(int j = y; j &lt; N; j += lowbit(j))
+    {
+      S[i][j] += v;
+    }
+   }
+}</p>
+
+<p>int sum<em>(int x, int y)
+{
+  int s</em> = 0;
+  for(int i = x; i; i-= lowbit(i))
+  {
+    for(int j = y; j; j-= lowbit(j))
+    {
+      s_ += S[i][j];
+    }
+  }
+  return s_;
+}
+```</p>
+
+<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/treearray/hdu1829.cpp" target="_blank">hdu1829</a></p>
+]]></content>
+  </entry>
+  
+</feed>
