@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Darren]]></title>
+  <link href="http://dnizna.github.io/atom.xml" rel="self"/>
+  <link href="http://dnizna.github.io/"/>
+  <updated>2013-05-26T10:35:40+08:00</updated>
+  <id>http://dnizna.github.io/</id>
+  <author>
+    <name><![CDATA[Darren]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[并查集]]></title>
+    <link href="http://dnizna.github.io/blog/2013/05/26/bing-cha-ji/"/>
+    <updated>2013-05-26T10:33:00+08:00</updated>
+    <id>http://dnizna.github.io/blog/2013/05/26/bing-cha-ji</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[hello world]]></title>
+    <link href="http://dnizna.github.io/blog/2013/05/13/hello-world/"/>
+    <updated>2013-05-13T17:18:00+08:00</updated>
+    <id>http://dnizna.github.io/blog/2013/05/13/hello-world</id>
+    <content type="html"><![CDATA[<p>hello world!!!!</p>
+]]></content>
+  </entry>
+  
+</feed>
