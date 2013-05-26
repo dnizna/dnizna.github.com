@@ -1,0 +1,44 @@
+{% unless page.no_header %}
+  <header>
+    {% if index %}
+      <h1 class="entry-title"><a href="{{ root_url }}{{ post.url }}">{% if site.titlecase %}{{ post.title | titlecase }}{% else %}{{ post.title }}{% endif %}</a></h1>
+    {% else %}
+      <h1 class="entry-title">{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h1>
+    {% endif %}
+    {% unless page.meta == false %}
+      <p class="meta">
+        {% include post/date.html %}{{ time }}
+        {% if site.disqus_short_name and page.comments != false and post.comments != false and site.disqus_show_comment_count == true %}
+         | <a href="{% if index %}{{ root_url }}{{ post.url }}{% endif %}#disqus_thread">Comments</a>
+        {% endif %}
+      </p>
+    {% endunless %}
+  </header>
+{% endunless %}
+{% if index %}
+  <div class="entry-content">{{ content | excerpt }}</div>
+  {% capture excerpted %}{{ content | has_excerpt }}{% endcapture %}
+  {% if excerpted == 'true' %}
+    <footer>
+      <a rel="full-article" href="{{ root_url }}{{ post.url }}">{{ site.excerpt_link }}</a>
+    </footer>
+  {% endif %}
+{% else %}
+<div class="entry-content">{{ content }}</div>
+<!-- Baidu Button BEGIN -->
+<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+<span class="bds_more">分享到：</span>
+<a class="bds_qzone"></a>
+<a class="bds_tsina"></a>
+<a class="bds_tqq"></a>
+<a class="bds_renren"></a>
+<a class="bds_t163"></a>
+<a class="shareCount"></a>
+</div>
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=5781020" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+{% endif %}
