@@ -4,7 +4,7 @@
   <title><![CDATA[Darren]]></title>
   <link href="http://dnizna.github.io/atom.xml" rel="self"/>
   <link href="http://dnizna.github.io/"/>
-  <updated>2013-05-28T20:42:38+08:00</updated>
+  <updated>2013-05-28T22:46:29+08:00</updated>
   <id>http://dnizna.github.io/</id>
   <author>
     <name><![CDATA[Darren]]></name>
@@ -114,7 +114,7 @@
 <p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">poj1182</a></p>
 
 <h4 id="section-8">2. 并查集的删除</h4>
-<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">hdu2473</a></p>
+<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/hdu2473.cpp" target="_blank">hdu2473</a></p>
 
 ]]></content>
   </entry>
