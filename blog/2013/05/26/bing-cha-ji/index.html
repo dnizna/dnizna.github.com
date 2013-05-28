@@ -1,0 +1,341 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>并查集 - Darren</title>
+  <meta name="author" content="Darren">
+
+  
+  <meta name="description" content="并查集 May 26th, 2013 | Comments 概述
+并查集也叫不相交集合。他是一种树形结构，用来处理不相交集合的合并及查询问题。 原理 1. 不相交集合的根
+并查集的集合内部存储是使用树形结构, 同一个集合里面的元素同属于一棵树。
+我们使用数组parent[x]表示节点x的父亲节点 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://dnizna.github.io/blog/2013/05/26/bing-cha-ji">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Darren" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Darren</a></h1>
+  
+    <h2>我要像梦一样自由.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:dnizna.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">并查集</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-26T11:01:00+08:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3 id="section">概述</h3>
+<p>并查集也叫不相交集合。他是一种树形结构，用来处理不相交集合的合并及查询问题。 </p>
+
+<h3 id="section-1">原理</h3>
+
+<h4 id="section-2">1. 不相交集合的根</h4>
+<p>并查集的集合内部存储是使用树形结构, 同一个集合里面的元素同属于一棵树。<br />
+我们使用数组parent[x]表示节点x的父亲节点，体现节点之间这种树形的关系。如果节点x是这颗树的根，那么parent[x] = x;  </p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">void</span> <span class="nf">root</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="k">while</span><span class="o">(</span><span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">!=</span> <span class="n">x</span><span class="o">)</span> <span class="n">x</span> <span class="o">=</span> <span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">];</span>
+</span><span class="line">  <span class="k">return</span> <span class="n">x</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h4 id="section-3">2. 合并俩个不相交集合</h4>
+<p>如果节点x和节点y分属于俩颗树，也就是属于俩个不同集合。我们分别找到x, y这俩个节点所在树的根rootx, rooty。
+将 parent[rootx] 指向 rooty，即 parent[rootx] = rooty。就可以将这俩颗树合并成一颗树了。  </p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">void</span> <span class="nf">union</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="kt">int</span> <span class="n">rootx</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">x</span><span class="o">),</span> <span class="n">rooty</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">y</span><span class="o">);</span>
+</span><span class="line">  <span class="k">if</span><span class="o">(</span><span class="n">rootx</span> <span class="o">!=</span> <span class="n">rooty</span><span class="o">)</span>
+</span><span class="line">  <span class="o">{</span>
+</span><span class="line">    <span class="n">parent</span><span class="o">[</span><span class="n">rootx</span><span class="o">]</span> <span class="o">=</span> <span class="n">rooty</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h4 id="section-4">3. 查询</h4>
+<p>判断俩个元素是否在同一个集合只需判断他们所在树的根节点是否相同。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">int</span> <span class="nf">query</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="kt">int</span> <span class="n">rootx</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">x</span><span class="o">),</span> <span class="n">rooty</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">y</span><span class="o">);</span>
+</span><span class="line">  <span class="k">return</span> <span class="n">rootx</span> <span class="o">==</span> <span class="n">rooty</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h4 id="section-5">4. 路径压缩</h4>
+<p>在查找节点x所在的树的根的过程中，基本算法是一直找节点x的父亲节点。在这个
+过程中，可以将这个链路上的所有节点的父亲节点直接指向根节点。
+如: a-&gt;b-&gt;c-&gt;d 这样的链路，查找a的根节点过程中会遍历a,b,c节点，可以将a,b,c节点的父亲节点都直接
+指向d，变成 a-&gt;d, b-&gt;d, c-&gt;d。下次查找过程就可以节省时间了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">int</span> <span class="nf">root</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="kt">int</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+</span><span class="line">  <span class="k">if</span><span class="o">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">])</span>
+</span><span class="line">  <span class="o">{</span>
+</span><span class="line">    <span class="c1">// 递归查找根节点</span>
+</span><span class="line">    <span class="n">rt</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">]);</span>
+</span><span class="line">    <span class="c1">// 路径压缩，将链路上的节点的父亲节点直接指向根节点</span>
+</span><span class="line">    <span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">=</span> <span class="n">rt</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">return</span> <span class="n">rt</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h3 id="section-6">应用</h3>
+
+<h4 id="section-7">1. 带权并查集</h4>
+<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">poj1182</a></p>
+
+<h4 id="section-8">2. 并查集的删除</h4>
+<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">hdu2473</a></p>
+
+</div>
+<!-- Baidu Button BEGIN -->
+<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+<span class="bds_more">分享到：</span>
+<a class="bds_qzone"></a>
+<a class="bds_tsina"></a>
+<a class="bds_tqq"></a>
+<a class="bds_renren"></a>
+<a class="bds_t163"></a>
+<a class="shareCount"></a>
+</div>
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=5781020" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Darren</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-26T11:01:00+08:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/algorithm/'>algorithm</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/26/shu-zhuang-shu-zu/" title="Previous Post: 树状数组">&laquo; 树状数组</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+<section>
+<h1>Categories</h1>
+<span class='categories_tag'> <a href='/blog/categories/algorithm' style='font-size: 160.0%'>Algorithm(2)</a> </span>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/bing-cha-ji/">并查集</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/shu-zhuang-shu-zu/">树状数组</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/13/hello-world/">Hello World</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Darren -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'dnizna';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://dnizna.github.io/blog/2013/05/26/bing-cha-ji/';
+        var disqus_url = 'http://dnizna.github.io/blog/2013/05/26/bing-cha-ji/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

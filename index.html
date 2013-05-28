@@ -9,9 +9,10 @@
   <meta name="author" content="Darren">
 
   
-  <meta name="description" content="概念
-对于一个整形数组A[n]， 动态修改数组中的项A[i]，然求A[0]到A[j]的和。这种问题传统的做法需要的时间复杂度是O(n)。 树状数组是一种数据结构可以使用O()的时间在线求数组和。 原理 1. lowbit函数
-对整数 x 表示成二进制之后，求出二进制表示中最右边的 1 的位置。如 &hellip;">
+  <meta name="description" content="概述
+并查集也叫不相交集合。他是一种树形结构，用来处理不相交集合的合并及查询问题。 原理 1. 不相交集合的根
+并查集的集合内部存储是使用树形结构, 同一个集合里面的元素同属于一棵树。
+我们使用数组parent[x]表示节点x的父亲节点，体现节点之间这种树形的关系。如果节点x是这颗树的根， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,6 +69,141 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/26/bing-cha-ji/">并查集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-26T11:01:00+08:00" pubdate data-updated="true">May 26<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/26/bing-cha-ji/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3 id="section">概述</h3>
+<p>并查集也叫不相交集合。他是一种树形结构，用来处理不相交集合的合并及查询问题。 </p>
+
+<h3 id="section-1">原理</h3>
+
+<h4 id="section-2">1. 不相交集合的根</h4>
+<p>并查集的集合内部存储是使用树形结构, 同一个集合里面的元素同属于一棵树。<br />
+我们使用数组parent[x]表示节点x的父亲节点，体现节点之间这种树形的关系。如果节点x是这颗树的根，那么parent[x] = x;  </p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">void</span> <span class="nf">root</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="k">while</span><span class="o">(</span><span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">!=</span> <span class="n">x</span><span class="o">)</span> <span class="n">x</span> <span class="o">=</span> <span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">];</span>
+</span><span class="line">  <span class="k">return</span> <span class="n">x</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h4 id="section-3">2. 合并俩个不相交集合</h4>
+<p>如果节点x和节点y分属于俩颗树，也就是属于俩个不同集合。我们分别找到x, y这俩个节点所在树的根rootx, rooty。
+将 parent[rootx] 指向 rooty，即 parent[rootx] = rooty。就可以将这俩颗树合并成一颗树了。  </p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">void</span> <span class="nf">union</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="kt">int</span> <span class="n">rootx</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">x</span><span class="o">),</span> <span class="n">rooty</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">y</span><span class="o">);</span>
+</span><span class="line">  <span class="k">if</span><span class="o">(</span><span class="n">rootx</span> <span class="o">!=</span> <span class="n">rooty</span><span class="o">)</span>
+</span><span class="line">  <span class="o">{</span>
+</span><span class="line">    <span class="n">parent</span><span class="o">[</span><span class="n">rootx</span><span class="o">]</span> <span class="o">=</span> <span class="n">rooty</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h4 id="section-4">3. 查询</h4>
+<p>判断俩个元素是否在同一个集合只需判断他们所在树的根节点是否相同。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">int</span> <span class="nf">query</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="kt">int</span> <span class="n">rootx</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">x</span><span class="o">),</span> <span class="n">rooty</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">y</span><span class="o">);</span>
+</span><span class="line">  <span class="k">return</span> <span class="n">rootx</span> <span class="o">==</span> <span class="n">rooty</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h4 id="section-5">4. 路径压缩</h4>
+<p>在查找节点x所在的树的根的过程中，基本算法是一直找节点x的父亲节点。在这个
+过程中，可以将这个链路上的所有节点的父亲节点直接指向根节点。
+如: a-&gt;b-&gt;c-&gt;d 这样的链路，查找a的根节点过程中会遍历a,b,c节点，可以将a,b,c节点的父亲节点都直接
+指向d，变成 a-&gt;d, b-&gt;d, c-&gt;d。下次查找过程就可以节省时间了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kt">int</span> <span class="nf">root</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">)</span>
+</span><span class="line"><span class="o">{</span>
+</span><span class="line">  <span class="kt">int</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+</span><span class="line">  <span class="k">if</span><span class="o">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">])</span>
+</span><span class="line">  <span class="o">{</span>
+</span><span class="line">    <span class="c1">// 递归查找根节点</span>
+</span><span class="line">    <span class="n">rt</span> <span class="o">=</span> <span class="n">root</span><span class="o">(</span><span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">]);</span>
+</span><span class="line">    <span class="c1">// 路径压缩，将链路上的节点的父亲节点直接指向根节点</span>
+</span><span class="line">    <span class="n">parent</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">=</span> <span class="n">rt</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">return</span> <span class="n">rt</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h3 id="section-6">应用</h3>
+
+<h4 id="section-7">1. 带权并查集</h4>
+<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">poj1182</a></p>
+
+<h4 id="section-8">2. 并查集的删除</h4>
+<p>代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">hdu2473</a></p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -301,12 +437,16 @@ sum[x] = S[x] + S[x - lowbit(x)] + S[x - lowbit(x) - lowbit(x - lowbit(x))] + �
     
 <section>
 <h1>Categories</h1>
-<span class='categories_tag'> <a href='/blog/categories/algorithm' style='font-size: 160.0%'>Algorithm(1)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/algorithm' style='font-size: 160.0%'>Algorithm(2)</a> </span>
 </section>
 
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/26/bing-cha-ji/">并查集</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/26/shu-zhuang-shu-zu/">树状数组</a>
