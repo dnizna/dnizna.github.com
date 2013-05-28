@@ -76,6 +76,6 @@ int root(int x)
 代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">poj1182</a>
 
 #### 2. 并查集的删除
-代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/poj1182.cpp" target="_blank">hdu2473</a>
+代码参考：<a href="https://github.com/dnizna/algorithm/blob/master/disjointset/hdu2473.cpp" target="_blank">hdu2473</a>
 
 
