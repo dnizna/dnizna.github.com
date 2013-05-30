@@ -9,10 +9,13 @@
   <meta name="author" content="Darren">
 
   
-  <meta name="description" content="概述
-并查集也叫不相交集合。他是一种树形结构，用来处理不相交集合的合并及查询问题。 原理 1. 不相交集合的根
-并查集的集合内部存储是使用树形结构, 同一个集合里面的元素同属于一棵树。
-我们使用数组parent[x]表示节点x的父亲节点，体现节点之间这种树形的关系。如果节点x是这颗树的根， &hellip;">
+  <meta name="description" content="基本概念
+floyd-warshall算法用来求图论中的任意俩点之间的最短路径。 原理
+floyd-warshall算法的原理是动态规划。
+我们使用 dist[i,j,k] 表示顶点 i 和顶点 j 的路径中经过的顶点的编号不大于 k 的最短路径。
+不难得到以下递推式： 用代码实现为： 1
+2
+3 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +72,93 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/30/floyd-warshallsuan-fa/">Floyd-warshall算法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-30T14:49:00+08:00" pubdate data-updated="true">May 30<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/30/floyd-warshallsuan-fa/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3 id="section">基本概念</h3>
+<p>floyd-warshall算法用来求图论中的任意俩点之间的最短路径。</p>
+
+<h3 id="section-1">原理</h3>
+<p>floyd-warshall算法的原理是动态规划。<br />
+我们使用 dist[i,j,k] 表示顶点 i 和顶点 j 的路径中经过的顶点的编号不大于 k  的最短路径。<br />
+不难得到以下递推式：<br />
+<script type="math/tex">dist[i,j,k] = min( dist[i, j, k], dist[i, k, k-1] + dist[k, j, k-1] )</script></p>
+
+<p>用代码实现为：  </p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+</span><span class="line">  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span><span class="line">    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+</span><span class="line">      <span class="k">if</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">])</span>
+</span><span class="line">        <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>实际中，空间可以减少到二维:  </p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+</span><span class="line">  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span><span class="line">    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+</span><span class="line">      <span class="k">if</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+</span><span class="line">        <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h3 id="section-2">应用</h3>
+
+<h4 id="section-3">基本使用</h4>
+<p><a href="https://github.com/dnizna/algorithm/blob/master/shortestpath/zoj1082.py" target="_blank">zoj1082</a></p>
+
+<h4 id="section-4">求最小环</h4>
+<p>根据递推式的意义， dist[i][j][k] 表示顶点 i 和顶点 j 的路径中经过的顶点编号不大于 k 的最短路径。<br />
+在经过 i, j 路径中加入顶点 k 前，dist数组记录了 i 和 j 路径中经过的顶点编号小于k的最短路径，假设顶点 k 在
+最小环中，这时环的长度为 dist[i][j][k-1] + mat[i][k] + mat[k][j]。  mat[k][j] 表示顶点 k 和顶点 j 的长度。 
+我们更新这个环长度的最小值即可。</p>
+
+<p><a href="https://github.com/dnizna/algorithm/blob/master/shortestpath/hdu1599.cpp" target="_blank">hdu1599</a></p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -437,12 +527,16 @@ sum[x] = S[x] + S[x - lowbit(x)] + S[x - lowbit(x) - lowbit(x - lowbit(x))] + �
     
 <section>
 <h1>Categories</h1>
-<span class='categories_tag'> <a href='/blog/categories/algorithm' style='font-size: 160.0%'>Algorithm(2)</a> </span>
+<span class='categories_tag'> <a href='/blog/categories/algorithm' style='font-size: 160.0%'>Algorithm(3)</a> </span>
 </section>
 
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/30/floyd-warshallsuan-fa/">Floyd-warshall算法</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/05/26/bing-cha-ji/">并查集</a>
